@@ -13,9 +13,9 @@ __pycache__/
 *$py.class
 
 # SQLite Database
-*.db
-*.sqlite3
-skillswap.db
+# *.db
+# *.sqlite3
+# skillswap.db (Commented out so you can upload your local data to Render)
 
 # OS generated files
 .DS_Store
