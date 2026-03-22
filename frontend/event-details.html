@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | SkillSwap Campus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+
+<body>
+    <div class="bg-mesh"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="sidebar">
+        <div class="d-flex align-items-center justify-content-between mb-5 ms-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="theme-toggle me-2" title="Toggle Theme">
+                <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+            </div>
+        </div>
+        <nav class="nav flex-column gap-2">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <a href="dashboard.html" class="nav-link-custom flex-grow-1"><i class="bi bi-grid-fill"></i>
+                    Dashboard</a>
+                <a href="#" id="logoutBtn" class="nav-link-custom text-danger px-3" title="Logout"><i
+                        class="bi bi-box-arrow-right"></i></a>
+            </div>
+            <a href="events.html" class="nav-link-custom active shadow-sm"><i class="bi bi-calendar-event-fill"></i>
+                Campus Hub</a>
+            <a href="marketplace.html" class="nav-link-custom"><i class="bi bi-shop"></i> Skill Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-folder-fill"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-3 text-uppercase letter-spacing-1">Account</p>
+                <a href="profile.html" class="nav-link-custom"><i class="bi bi-person-circle"></i> Profile</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content" style="margin-left: var(--sidebar-width); padding: 3rem;">
+        <div class="container-fluid">
+            <button onclick="window.location.href='events.html'"
+                class="btn btn-link text-secondary text-decoration-none mb-4 p-0">
+                <i class="bi bi-arrow-left me-2"></i> Back to Hub
+            </button>
+
+            <div class="row g-5">
+                <div class="col-lg-8">
+                    <div class="glass-card p-5 animate-fade-in">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div>
+                                <span id="eventBadge"
+                                    class="badge bg-primary-gradient rounded-pill px-3 py-2 mb-3">Event</span>
+                                <h1 id="eventTitle" class="display-5 fw-bold text-white mb-2">Loading Event...</h1>
+                                <p class="text-secondary fs-5" id="eventSubtitle"><i
+                                        class="bi bi-geo-alt-fill me-2 text-primary"></i> <span id="eventLoc">...</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <hr class="border-secondary opacity-25 my-4">
+
+                        <h5 class="fw-bold text-white mb-3">About this Event</h5>
+                        <p id="eventDesc" class="text-secondary fs-5 lh-lg mb-5">
+                            Searching for event details...
+                        </p>
+
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-6">
+                                <div
+                                    class="bg-dark bg-opacity-25 p-4 rounded-4 border border-secondary border-opacity-10">
+                                    <h6 class="text-secondary small fw-bold text-uppercase mb-2">Date & Time</h6>
+                                    <h5 class="text-white mb-0" id="eventTime">...</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div
+                                    class="bg-dark bg-opacity-25 p-4 rounded-4 border border-secondary border-opacity-10">
+                                    <h6 class="text-secondary small fw-bold text-uppercase mb-2">Organized By</h6>
+                                    <h5 class="text-white mb-0" id="eventOrg">Campus Admin</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button id="joinBtn"
+                                class="btn btn-primary-gradient btn-lg flex-grow-1 py-3 rounded-4 shadow-lg">
+                                <i class="bi bi-calendar-plus me-2"></i> Register Now
+                            </button>
+                            <button class="btn btn-outline-light btn-lg flex-grow-1 py-3 rounded-4"
+                                data-bs-toggle="modal" data-bs-target="#participantsModal">
+                                <i class="bi bi-people-fill me-2"></i> Who's Registered
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="glass-card p-4 animate-fade-in stagger-1">
+                        <h5 class="fw-bold text-white mb-4">Event Insights</h5>
+                        <div class="d-flex flex-column gap-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary">Expected Turnout</span>
+                                <span class="text-white fw-bold">100+ Students</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary">Category</span>
+                                <span class="text-primary fw-bold" id="eventType">Workshop</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-secondary">Credits Required</span>
+                                <span class="text-warning fw-bold">FREE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participants Modal -->
+    <div class="modal fade" id="participantsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Registered Students</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="participantsList" class="d-flex flex-column gap-3">
+                        <!-- Dynamic Participants -->
+                        <div class="text-center py-3 text-secondary italic">
+                            Loading list...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/event-details.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+
+</html>

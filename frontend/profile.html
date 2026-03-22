@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | SkillSwap Campus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <style>
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+        }
+
+        .profile-header {
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body class="has-3d-bg">
+    <div class="cyber-hud-overlay">
+        <div class="corner-bracket cb-tl"></div>
+        <div class="corner-bracket cb-tr"></div>
+        <div class="corner-bracket cb-bl"></div>
+        <div class="corner-bracket cb-br"></div>
+    </div>
+    <div class="bg-mesh"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    <!-- Sidebar -->
+    <div class="sidebar animate-fade-in shadow-lg">
+        <div class="d-flex align-items-center justify-content-between mb-4 ms-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+                <div class="theme-toggle" title="Toggle Theme">
+                    <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                </div>
+                <a href="#" id="logoutBtn"
+                    class="logout-btn text-danger d-flex align-items-center gap-1 text-decoration-none extra-small fw-bold opacity-75 hover-scale">
+                    <i class="bi bi-box-arrow-right fs-5"></i> <span>LOGOUT</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Profile Hub -->
+        <div class="sidebar-profile" onclick="window.location.href='profile.html'">
+            <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff" id="sidebarAvatar"
+                class="rounded-circle border border-secondary border-opacity-25" width="40" height="40">
+            <div class="flex-grow-1 overflow-hidden">
+                <h6 class="mb-0 text-white small fw-bold text-truncate" id="sidebarUserName">Account</h6>
+                <p class="mb-0 text-secondary extra-small" id="sidebarCredits">0 Credits</p>
+            </div>
+            <i class="bi bi-chevron-right extra-small text-secondary"></i>
+        </div>
+
+        <nav class="nav flex-column gap-1">
+            <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">Nav</p>
+            <a href="dashboard.html" class="nav-link-custom"><i class="bi bi-grid-fill"></i> Dashboard</a>
+            <a href="social.html" class="nav-link-custom"><i class="bi bi-people-fill"></i> Campus Social</a>
+            <a href="startups.html" class="nav-link-custom"><i class="bi bi-rocket-takeoff-fill"></i> Startup Hub</a>
+            <a href="architect.html" class="nav-link-custom"><i class="bi bi-cpu-fill"></i> Venture Architect</a>
+            <a href="marketplace.html" class="nav-link-custom"><i class="bi bi-shop"></i> Skill Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-kanban"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="events.html" class="nav-link-custom"><i class="bi bi-calendar-event-fill"></i> Campus Hub</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">
+                    Account</p>
+                <a href="profile.html" class="nav-link-custom active shadow-sm"><i class="bi bi-person-circle"></i> View
+                    Profile</a>
+                <a href="#" class="nav-link-custom text-danger logout-btn mt-2"><i class="bi bi-box-arrow-right"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="glass-card profile-header d-flex align-items-center gap-5">
+            <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128" id="profilePic"
+                class="rounded-circle shadow" alt="Profile Picture">
+            <div>
+                <h1 class="fw-bold mb-2" id="profileName">Loading...</h1>
+                <p class="text-secondary fs-5 mb-3" id="profileTagline">Department of <span id="profileDept">...</span>
+                    • Year <span id="profileYear">...</span></p>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-primary px-3 py-2" id="profileCredits">0 Credits</span>
+                    <span class="badge bg-info px-3 py-2" id="profileXP">0 XP</span>
+                    <span class="badge border border-info px-3 py-2" id="profileLevel">Lvl 1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card p-0 mb-4 overflow-hidden position-relative" style="height: 600px; background: #050505;">
+            <div id="neuralNetworkSkills" class="w-100 h-100">
+                <!-- Neural Network Canvas will be here -->
+                <div class="position-absolute bottom-0 start-0 p-3 z-index-1">
+                    <h6 class="extra-small text-uppercase letter-spacing-2 opacity-50 mb-0">Neural Skill Map v1.0</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-4">Bio & About</h5>
+                    <p class="text-secondary" id="profileBio">No bio added yet. Tell the campus about yourself!</p>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#editProfileModal">Edit Profile</button>
+                </div>
+
+                <div class="glass-card p-4 mt-4">
+                    <h5 class="fw-bold mb-4">My Skills</h5>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <h6 class="text-secondary small fw-bold mb-3">TEACHING</h6>
+                            <div id="teachingSkills" class="d-flex flex-wrap gap-2">
+                                <!-- Dynamic Skills -->
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="text-secondary small fw-bold mb-3">LEARNING</h6>
+                            <div id="learningSkills" class="d-flex flex-wrap gap-2">
+                                <!-- Dynamic Skills -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-4">Achievements</h5>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-award-fill text-warning fs-3"></i>
+                            <div>
+                                <p class="mb-0 fw-bold">Top Mentor</p>
+                                <small class="text-secondary">Highly rated by 10+ students</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-lightning-fill text-primary fs-3"></i>
+                            <div>
+                                <p class="mb-0 fw-bold">Gig Hunter</p>
+                                <small class="text-secondary">Completed 5+ micro-gigs</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Edit Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Full Name</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="editName"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Bio</label>
+                            <textarea class="form-control bg-dark border-secondary text-white" id="editBio"
+                                rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="assets/js/hero-background.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.initHeroBackground) window.initHeroBackground();
+        });
+    </script>
+    <script src="assets/js/three-neural.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+
+</html>

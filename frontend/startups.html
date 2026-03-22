@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Hub | SkillSwap Innovation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .synergy-score-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-glow);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .pitch-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pitch-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .synergy-badge {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .founder-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* UI Fixes */
+        .top-aligned-stat {
+            justify-content: flex-start !important;
+            padding-top: 2rem !important;
+        }
+
+        .header-glow-text {
+            color: rgba(255, 255, 255, 0.6) !important;
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .badge-glass {
+            background: rgba(99, 102, 241, 0.2) !important;
+            border: 1px solid rgba(99, 102, 241, 0.4) !important;
+            color: #ffffff !important;
+            /* Pure white for maximum contrast */
+            backdrop-filter: blur(8px);
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            padding: 4px 14px !important;
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Ensure visibility if JS fails */
+        .stat-card,
+        .glass-card {
+            opacity: 1 !important;
+        }
+
+        .glow-ring {
+            box-shadow: 0 0 15px var(--primary-glow);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px var(--primary-glow);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--primary-glow);
+            }
+
+            100% {
+                box-shadow: 0 0 5px var(--primary-glow);
+            }
+        }
+    </style>
+</head>
+
+<body class="has-3d-bg">
+    <div class="mesh-container">
+        <div id="etheral-shadow-container" style="position: absolute; inset: 0; z-index: 1;"></div>
+        <div id="dashboard-mesh" style="position: absolute; inset: 0; z-index: 2;"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar animate-fade-in shadow-lg">
+        <div class="d-flex align-items-center justify-content-between mb-4 ms-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+                <div class="theme-toggle" title="Toggle Theme">
+                    <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                </div>
+                <a href="#" id="logoutBtn"
+                    class="logout-btn text-danger d-flex align-items-center gap-1 text-decoration-none extra-small fw-bold opacity-75 hover-scale">
+                    <i class="bi bi-box-arrow-right fs-5"></i> <span>LOGOUT</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Profile Hub -->
+        <div class="sidebar-profile" onclick="window.location.href='profile.html'">
+            <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff" id="sidebarAvatar"
+                class="rounded-circle border border-secondary border-opacity-25" width="40" height="40">
+            <div class="flex-grow-1 overflow-hidden">
+                <h6 class="mb-0 text-white small fw-bold text-truncate" id="sidebarUserName">Account</h6>
+                <p class="mb-0 text-secondary extra-small" id="sidebarCredits">0 Credits</p>
+            </div>
+            <i class="bi bi-chevron-right extra-small text-secondary"></i>
+        </div>
+
+        <nav class="nav flex-column gap-1">
+            <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">Nav</p>
+            <a href="dashboard.html" class="nav-link-custom"><i class="bi bi-grid-fill"></i> Dashboard</a>
+            <a href="social.html" class="nav-link-custom"><i class="bi bi-people-fill"></i> Campus Social</a>
+            <a href="startups.html" class="nav-link-custom active shadow-sm"><i class="bi bi-rocket-takeoff-fill"></i>
+                Startup Hub</a>
+            <a href="architect.html" class="nav-link-custom"><i class="bi bi-cpu-fill"></i> Venture Architect</a>
+            <a href="marketplace.html" class="nav-link-custom"><i class="bi bi-shop"></i> Skill Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-kanban"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="events.html" class="nav-link-custom"><i class="bi bi-calendar-event-fill"></i> Campus Hub</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">
+                    Account</p>
+                <a href="profile.html" class="nav-link-custom"><i class="bi bi-person-circle"></i> View Profile</a>
+                <a href="#" class="nav-link-custom text-danger logout-btn mt-2"><i class="bi bi-box-arrow-right"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content animate-fade-in">
+        <div class="container-fluid">
+            <!-- Header section -->
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-bold mb-1 holographic-header">Startup Hub <span
+                            class="badge badge-glass fs-6 ms-2 rounded-pill">ALPHA</span></h2>
+                    <p class="header-glow-text small">Where campus ideas turn into reality. Find your squad.</p>
+                </div>
+                <button class="btn btn-primary-gradient rounded-pill px-4 py-2 shadow-lg hover-scale"
+                    data-bs-toggle="modal" data-bs-target="#pitchModal">
+                    <i class="bi bi-plus-lg me-2"></i> Launch a Pitch
+                </button>
+            </div>
+
+            <div class="row g-4">
+                <!-- Left Column: Synergy Matcher -->
+                <div class="col-lg-4">
+                    <div
+                        class="glass-card stat-card top-aligned-stat p-4 border-0 border-top border-4 border-primary shadow-lg mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0 text-white">AI Synergy Match</h5>
+                            <i class="bi bi-cpu-fill text-primary fs-4"></i>
+                        </div>
+                        <p class="text-secondary small mb-4">Based on your skills, these startups need you the most.</p>
+
+                        <div id="synergyMatches" class="d-flex flex-column gap-3">
+                            <!-- Match items injected here -->
+                            <div class="text-center py-5 text-secondary">
+                                <div class="spinner-border spinner-border-sm text-primary mb-2"></div>
+                                <p class="extra-small">Calculating your synergy...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Received Invitations -->
+                    <div id="invitationsPanel"
+                        class="glass-card p-4 border-0 border-top border-4 border-warning shadow-lg mb-4 d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Squad Invites</h6>
+                            <span class="badge bg-warning text-dark rounded-pill" id="inviteCount">0</span>
+                        </div>
+                        <div id="receivedInvitationsList" class="d-flex flex-column gap-2">
+                            <!-- Injected invites -->
+                        </div>
+                    </div>
+
+                    <div class="crystal-card p-4 shadow-sm scroll-reveal" data-delay="100">
+                        <h6 class="fw-bold text-uppercase extra-small letter-spacing-1 text-secondary mb-3">Campus
+                            Traction</h6>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small text-white">Active Ventures</span>
+                            <span class="fw-bold text-primary" id="totalStartups">0</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="small text-white">Open Roles</span>
+                            <span class="fw-bold text-info" id="openRoles">0</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 4px; background: rgba(255,255,255,0.05);">
+                            <div class="progress-bar bg-primary-gradient" style="width: 70%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Requests for Owners -->
+                    <div id="ownerRequestsPanel"
+                        class="glass-card p-4 border-0 border-top border-4 border-info shadow-lg mt-4 d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Squad Requests</h6>
+                            <span class="badge bg-info rounded-pill" id="requestCount">0</span>
+                        </div>
+                        <div id="pendingRequestsList" class="d-flex flex-column gap-2">
+                            <!-- Injected requests -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Pitch Feed -->
+                <div class="col-lg-8">
+                    <h4 class="fw-bold mb-4 holographic-header">Trending Pitches</h4>
+                    <div id="pitchFeed" class="row g-4">
+                        <!-- Pitch cards injected here -->
+                        <div class="col-12 text-center py-5">
+                            <i class="bi bi-rocket fs-1 text-secondary opacity-25"></i>
+                            <p class="text-secondary mt-3">Scanning campus for innovation...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Launch Pitch Modal -->
+    <div class="modal fade" id="pitchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-card p-3 border-secondary border-opacity-25">
+                <div class="modal-header border-0 pb-0">
+                    <div>
+                        <h4 class="modal-title fw-bold holographic-header">Launch Your Pitch</h4>
+                        <p class="text-secondary extra-small mb-0">Define the problem and the squad you need.</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-4">
+                    <form id="startupForm">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label extra-small fw-bold text-secondary text-uppercase">Startup
+                                    Title</label>
+                                <input type="text" id="title"
+                                    class="form-control bg-dark border-secondary border-opacity-25 text-white p-3"
+                                    placeholder="e.g. EcoRoute Tracker" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label extra-small fw-bold text-secondary text-uppercase">The Problem
+                                    Statement</label>
+                                <textarea id="problem"
+                                    class="form-control bg-dark border-secondary border-opacity-25 text-white p-3"
+                                    rows="3" placeholder="What pain point are you solving?" required></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label extra-small fw-bold text-secondary text-uppercase">The
+                                    Vision</label>
+                                <textarea id="vision"
+                                    class="form-control bg-dark border-secondary border-opacity-25 text-white p-3"
+                                    rows="2" placeholder="Where do you see this in 6 months?" required></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label extra-small fw-bold text-secondary text-uppercase">Max Squad
+                                    Size</label>
+                                <input type="number" id="maxMembers"
+                                    class="form-control bg-dark border-secondary border-opacity-25 text-white p-3"
+                                    value="5" min="2" max="20" required>
+                            </div>
+                            <div class="col-md-12 mb-4">
+                                <label class="form-label extra-small fw-bold text-secondary text-uppercase">Squad Roles
+                                    Required</label>
+                                <div id="skillsSelectContainer" class="d-flex flex-wrap gap-2 mb-2">
+                                    <!-- Dynamic skill tags checkable -->
+                                    <div class="text-secondary extra-small">Loading skills...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid mt-2">
+                            <button type="submit"
+                                class="btn btn-primary-gradient py-3 rounded-pill fw-bold shadow-lg hover-scale">
+                                BROADCAST TO CAMPUS
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Synergy Squad Modal -->
+    <div class="modal fade" id="squadModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3 border-secondary border-opacity-25">
+                <div class="modal-header border-0 pb-0">
+                    <div>
+                        <h4 class="modal-title fw-bold holographic-header">Synergy Squad</h4>
+                        <p class="text-secondary extra-small mb-0">People matching the required skills for this pitch.
+                        </p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-4">
+                    <div id="similarMindsList" class="d-flex flex-column gap-3">
+                        <!-- Similar minds injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/dashboard-mesh.js"></script>
+    <script src="assets/js/etheral-shadow.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.initEtheralShadow) {
+                window.initEtheralShadow('etheral-shadow-container', {
+                    color: 'rgba(99, 102, 241, 0.4)',
+                    scale: 80,
+                    speed: 45,
+                    noiseOpacity: 0.15
+                });
+            }
+            if (window.initDashboardMesh) window.initDashboardMesh('dashboard-mesh');
+        });
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/startups.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+
+</html>

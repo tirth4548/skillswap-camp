@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Market | SkillSwap Campus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-mesh"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    <!-- Sidebar -->
+    <div class="sidebar animate-fade-in shadow-lg">
+        <div class="d-flex align-items-center justify-content-between mb-4 ms-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+                <div class="theme-toggle" title="Toggle Theme">
+                    <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                </div>
+                <a href="#" id="logoutBtn"
+                    class="logout-btn text-danger d-flex align-items-center gap-1 text-decoration-none extra-small fw-bold opacity-75 hover-scale">
+                    <i class="bi bi-box-arrow-right fs-5"></i> <span>LOGOUT</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Profile Hub -->
+        <div class="sidebar-profile" onclick="window.location.href='profile.html'">
+            <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff" id="sidebarAvatar"
+                class="rounded-circle border border-secondary border-opacity-25" width="40" height="40">
+            <div class="flex-grow-1 overflow-hidden">
+                <h6 class="mb-0 text-white small fw-bold text-truncate" id="sidebarUserName">Account</h6>
+                <p class="mb-0 text-secondary extra-small" id="sidebarCredits">0 Credits</p>
+            </div>
+            <i class="bi bi-chevron-right extra-small text-secondary"></i>
+        </div>
+
+        <nav class="nav flex-column gap-1">
+            <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">Nav</p>
+            <a href="dashboard.html" class="nav-link-custom"><i class="bi bi-grid-fill"></i> Dashboard</a>
+            <a href="social.html" class="nav-link-custom"><i class="bi bi-people-fill"></i> Campus Social</a>
+            <a href="startups.html" class="nav-link-custom"><i class="bi bi-rocket-takeoff-fill"></i> Startup Hub</a>
+            <a href="architect.html" class="nav-link-custom"><i class="bi bi-cpu-fill"></i> Venture Architect</a>
+            <a href="marketplace.html" class="nav-link-custom active shadow-sm"><i class="bi bi-shop"></i> Skill
+                Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-kanban"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="events.html" class="nav-link-custom"><i class="bi bi-calendar-event-fill"></i> Campus Hub</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">
+                    Account</p>
+                <a href="profile.html" class="nav-link-custom"><i class="bi bi-person-circle"></i> View Profile</a>
+                <a href="#" class="nav-link-custom text-danger logout-btn mt-2"><i class="bi bi-box-arrow-right"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="fw-bold mb-0">Skill Marketplace</h2>
+                <p class="text-secondary">Trade your expertise for new skills.</p>
+            </div>
+            <button class="btn btn-primary-gradient" data-bs-toggle="modal" data-bs-target="#addSkillModal">
+                <i class="bi bi-plus-lg me-2"></i> Add My Skill
+            </button>
+        </div>
+
+        <!-- Tabs for Mentors and Learners -->
+        <ul class="nav nav-pills mb-4 gap-2" id="marketTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active rounded-pill px-4" id="mentors-tab" data-bs-toggle="pill"
+                    data-bs-target="#mentorsList" type="button" role="tab">Browse Mentors</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link rounded-pill px-4" id="learners-tab" data-bs-toggle="pill"
+                    data-bs-target="#learnersList" type="button" role="tab">Find Learners</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="marketTabsContent">
+            <!-- Mentors Tab -->
+            <div class="tab-pane fade show active" id="mentorsList" role="tabpanel">
+                <div class="row g-4" id="mentorGrid">
+                    <!-- Dynamic Mentors -->
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Learners Tab -->
+            <div class="tab-pane fade" id="learnersList" role="tabpanel">
+                <div class="row g-4" id="learnerGrid">
+                    <!-- Dynamic Learners -->
+                    <div class="col-12 text-center py-5 text-secondary">
+                        <p>No learners found yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Skill Modal -->
+    <div class="modal fade" id="addSkillModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Add Skill to Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSkillForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Skill</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="skillSelect" required>
+                                <!-- Populate from API -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">I want to...</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="skillType" id="typeTeach"
+                                        value="teach" checked>
+                                    <label class="form-check-label" for="typeTeach">Teach & Earn</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="skillType" id="typeLearn"
+                                        value="learn">
+                                    <label class="form-check-label" for="typeLearn">Learn & Pay</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Proficiency</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="proficiency" required>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Add to Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/hero-background.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.initHeroBackground) window.initHeroBackground();
+        });
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/marketplace.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+
+</html>

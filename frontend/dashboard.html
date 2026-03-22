@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SkillSwap Campus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            height: 100%;
+        }
+
+        /* Compact sidebar cards */
+        .sidebar-compact {
+            padding: 1rem 1.25rem !important;
+        }
+    </style>
+</head>
+
+<body class="has-3d-bg">
+    <div class="mesh-container">
+        <div id="etheral-shadow-container" style="position: absolute; inset: 0; z-index: 1;"></div>
+        <div id="dashboard-mesh" style="position: absolute; inset: 0; z-index: 2;"></div>
+    </div>
+    <!-- Sidebar -->
+    <div class="sidebar animate-fade-in shadow-lg">
+        <div class="d-flex align-items-center justify-content-between mb-4 ms-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+                <div class="theme-toggle" title="Toggle Theme">
+                    <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                </div>
+                <a href="#" id="logoutBtn"
+                    class="logout-btn text-danger d-flex align-items-center gap-1 text-decoration-none extra-small fw-bold opacity-75 hover-scale">
+                    <i class="bi bi-box-arrow-right fs-5"></i> <span>LOGOUT</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Profile Hub -->
+        <div class="sidebar-profile" onclick="window.location.href='profile.html'">
+            <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff" id="sidebarAvatar"
+                class="rounded-circle border border-secondary border-opacity-25" width="40" height="40">
+            <div class="flex-grow-1 overflow-hidden">
+                <h6 class="mb-0 text-white small fw-bold text-truncate" id="sidebarUserName">Account</h6>
+                <p class="mb-0 text-secondary extra-small" id="sidebarCredits">0 Credits</p>
+            </div>
+            <i class="bi bi-chevron-right extra-small text-secondary"></i>
+        </div>
+
+        <nav class="nav flex-column gap-1">
+            <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">Nav</p>
+            <a href="dashboard.html" class="nav-link-custom active shadow-sm"><i class="bi bi-grid-fill"></i>
+                Dashboard</a>
+            <a href="social.html" class="nav-link-custom"><i class="bi bi-people-fill"></i> Campus Social</a>
+            <a href="startups.html" class="nav-link-custom"><i class="bi bi-rocket-takeoff-fill"></i> Startup Hub</a>
+            <a href="architect.html" class="nav-link-custom"><i class="bi bi-cpu-fill"></i> Venture Architect</a>
+            <a href="marketplace.html" class="nav-link-custom"><i class="bi bi-shop"></i> Skill Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-kanban"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="events.html" class="nav-link-custom"><i class="bi bi-calendar-event-fill"></i> Campus Hub</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">
+                    Account</p>
+                <a href="profile.html" class="nav-link-custom"><i class="bi bi-person-circle"></i> View Profile</a>
+                <a href="#" class="nav-link-custom text-danger logout-btn mt-2"><i class="bi bi-box-arrow-right"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content animate-fade-in">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-bold mb-1 holographic-header">Welcome back, <span id="userName"
+                            class="kinetic-name">User</span>! 👋</h2>
+                    <p class="text-secondary small" id="dashboardSubtitle">
+                        <span class="typewriter-container" id="subtitleText"></span><span
+                            class="typewriter-cursor"></span>
+                    </p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="theme-toggle" title="Toggle Theme">
+                        <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                    </div>
+                    <div
+                        class="d-flex gap-4 align-items-center bg-dark bg-opacity-25 p-2 pe-3 rounded-pill border border-secondary border-opacity-25">
+                        <div
+                            class="d-flex flex-column align-items-end pe-2 border-end border-secondary border-opacity-25 me-1">
+                            <span class="text-secondary extra-small fw-bold">EXPERIENCE</span>
+                            <span class="text-info fw-bold small"><span id="userXP" class="counter-value">0</span> XP
+                                (Lvl <span id="userLevel">1</span>)</span>
+                        </div>
+                        <div class="d-flex flex-column align-items-end pe-2">
+                            <span class="text-secondary extra-small fw-bold">BALANCE</span>
+                            <span class="text-warning fw-bold small"><span id="userCredits"
+                                    class="counter-value">0</span>
+                                Credits</span>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" id="userAvatar"
+                            class="rounded-circle border border-secondary border-opacity-50" width="42" height="42"
+                            alt="Avatar">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="bento-stats-grid mb-5 scroll-reveal">
+                <div data-delay="0">
+                    <div
+                        class="holographic-panel crystal-card stat-card border-info border-opacity-50 border-0 border-start border-4 text-center py-4 shadow-sm">
+                        <div class="parallax-stat-content">
+                            <h5 class="text-secondary extra-small fw-bold text-uppercase mb-2">Mastered Skills</h5>
+                            <h2 class="fw-bold mb-0 text-white"><span id="skillsTaughtCount"
+                                    class="holographic-header counter-value">0</span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div data-delay="100">
+                    <div
+                        class="holographic-panel crystal-card stat-card border-success border-opacity-50 border-0 border-start border-4 text-center py-4 shadow-sm">
+                        <div class="parallax-stat-content">
+                            <h5 class="text-secondary extra-small fw-bold text-uppercase mb-2">Success Rate</h5>
+                            <h2 class="fw-bold mb-0 text-white"><span id="gigsDoneCount"
+                                    class="holographic-header counter-value">0</span>
+                                Gigs
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+                <div data-delay="200">
+                    <div
+                        class="holographic-panel crystal-card stat-card border-primary border-opacity-50 border-0 border-start border-4 text-center py-4 shadow-sm">
+                        <div class="parallax-stat-content">
+                            <h5 class="text-secondary extra-small fw-bold text-uppercase mb-2">Active Collaborations
+                            </h5>
+                            <h2 class="fw-bold mb-0 text-white"><span id="activeProjectsCount"
+                                    class="holographic-header counter-value">0</span></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-main-grid">
+                <!-- Main Feed Area -->
+                <div class="bento-feed-col">
+                    <!-- Split Feed: Apps & Active Gigs -->
+                    <div class="bento-gigs-split">
+                        <!-- Incoming Gig Applications -->
+                        <div class="scroll-reveal bento-card-grow" id="applicationsSection" style="display: none;"
+                            data-delay="100">
+                            <h4 class="fw-bold mb-4 holographic-header">Pending Gig Applications</h4>
+                            <div id="applicationList" class="d-flex flex-column gap-3 bento-inner-scroll">
+                                <!-- Dynamic Applications -->
+                            </div>
+                        </div>
+
+                        <!-- Active Gigs (In Progress) -->
+                        <div class="scroll-reveal bento-card-grow" id="activeGigsSection" style="display: none;"
+                            data-delay="200">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="fw-bold mb-0 holographic-header">Active Gigs</h4>
+                                <span class="badge bg-primary-gradient rounded-pill" id="activeGigsCount">0</span>
+                            </div>
+                            <div id="activeGigsList" class="d-flex flex-column gap-3 bento-inner-scroll">
+                                <!-- Dynamic Active Gigs -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registered Events -->
+                    <div class="scroll-reveal bento-card-grow" data-delay="300">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold mb-0 holographic-header">Registered Events</h4>
+                            <a href="events.html" class="btn btn-sm btn-link text-primary text-decoration-none">Browse
+                                Hub</a>
+                        </div>
+                        <div id="registeredEvents" class="row g-3 bento-inner-scroll">
+                            <!-- Dynamic Joined Events -->
+                            <div class="col-12 text-center py-4 text-secondary small">
+                                Loading your campus schedule...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal bento-card-grow" data-delay="400">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold mb-0 holographic-header">My Workspaces</h4>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#createWorkspaceModal">New Workspace</button>
+                        </div>
+                        <div id="workspaceList" class="row g-3 bento-inner-scroll">
+                            <!-- Dynamic Workspaces -->
+                            <div class="col-12 text-center py-5 text-secondary">
+                                <i class="bi bi-folder2-open fs-1"></i>
+                                <p class="mt-2">No active workspaces. Start a collaboration!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bento Right Sidebar -->
+                <div class="bento-sidebar-col">
+                    <!-- Campus Event Preview -->
+                    <div class="crystal-card stat-card sidebar-compact shadow-sm glow-info scroll-reveal d-flex flex-column"
+                        id="campusEventsPreview" data-delay="100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Campus Events</h6>
+                            <a href="events.html" class="text-primary extra-small text-decoration-none fw-bold">View All
+                                <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                        <div id="upcomingEventsList" class="d-flex flex-column gap-2 bento-inner-scroll">
+                            <!-- Dynamic Events -->
+                        </div>
+                    </div>
+
+                    <!-- Discover Match -->
+                    <div class="bento-card-grow crystal-card stat-card sidebar-compact border-0 border-top border-4 border-light shadow-lg position-relative overflow-hidden glow-primary scroll-reveal d-flex flex-column"
+                        data-delay="200">
+                        <div class="position-absolute top-0 end-0 p-2 opacity-10">
+                            <i class="bi bi-person-hearts fs-2 text-white"></i>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 position-relative z-1">
+                            <div>
+                                <h6 class="fw-bold mb-0 text-white">Discover Match</h6>
+                                <p class="text-white text-opacity-75 extra-small mb-0">Find your next dev duo</p>
+                            </div>
+                            <a href="social.html"
+                                class="btn btn-sm btn-light rounded-pill px-3 fw-bold text-primary shadow-sm hover-scale">
+                                Open Hub <i class="bi bi-arrow-right ms-1"></i></a>
+                        </div>
+                        <div id="matchSuggestions"
+                            class="d-flex flex-column gap-2 position-relative z-1 bento-inner-scroll"
+                            style="overflow-y:visible;">
+                            <!-- Dynamic Matches -->
+                        </div>
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary-gradient opacity-75"
+                            style="z-index: 0;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="createWorkspaceModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Create Workspace</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createWorkspaceForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Project Title</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="wsTitle"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Description</label>
+                            <textarea class="form-control bg-dark border-secondary text-white" id="wsDesc"
+                                rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Create Workspace</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/dashboard-mesh.js"></script>
+    <script src="assets/js/etheral-shadow.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.initEtheralShadow) {
+                window.initEtheralShadow('etheral-shadow-container', {
+                    color: 'rgba(99, 102, 241, 0.4)', // Much more vibrant
+                    scale: 80,
+                    speed: 45,
+                    noiseOpacity: 0.15
+                });
+            }
+            if (window.initDashboardMesh) window.initDashboardMesh('dashboard-mesh');
+        });
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/animations.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venture Architect | SkillSwap AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .architect-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .wizard-card {
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .choice-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .choice-card:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .choice-card.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .blueprint-card {
+            background: linear-gradient(145deg, rgba(20, 20, 35, 0.9) 0%, rgba(10, 10, 20, 0.95) 100%);
+            border-left: 4px solid var(--primary);
+        }
+    </style>
+</head>
+
+<body class="has-3d-bg">
+    <div class="mesh-container">
+        <div id="etheral-shadow-container" style="position: absolute; inset: 0; z-index: 1;"></div>
+        <div id="dashboard-mesh" style="position: absolute; inset: 0; z-index: 2;"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar animate-fade-in shadow-lg">
+        <div class="d-flex align-items-center justify-content-between mb-4 ms-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary-gradient rounded-3 p-2 shadow-sm">
+                    <i class="bi bi-intersect text-white fs-4"></i>
+                </div>
+                <h3 class="fw-bold mb-0">SkillSwap</h3>
+            </div>
+            <div class="d-flex align-items-center gap-2 me-2">
+                <div class="theme-toggle" title="Toggle Theme">
+                    <div class="toggle-knob"><span class="toggle-icon">🌙</span></div>
+                </div>
+                <a href="#" id="logoutBtn"
+                    class="logout-btn text-danger d-flex align-items-center gap-1 text-decoration-none extra-small fw-bold opacity-75 hover-scale">
+                    <i class="bi bi-box-arrow-right fs-5"></i> <span>LOGOUT</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Profile Hub -->
+        <div class="sidebar-profile" onclick="window.location.href='profile.html'">
+            <img src="https://ui-avatars.com/api/?name=User&background=random&color=fff" id="sidebarAvatar"
+                class="rounded-circle border border-secondary border-opacity-25" width="40" height="40">
+            <div class="flex-grow-1 overflow-hidden">
+                <h6 class="mb-0 text-white small fw-bold text-truncate" id="sidebarUserName">Account</h6>
+                <p class="mb-0 text-secondary extra-small" id="sidebarCredits">0 Credits</p>
+            </div>
+            <i class="bi bi-chevron-right extra-small text-secondary"></i>
+        </div>
+
+        <nav class="nav flex-column gap-1">
+            <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">Nav</p>
+            <a href="dashboard.html" class="nav-link-custom"><i class="bi bi-grid-fill"></i> Dashboard</a>
+            <a href="social.html" class="nav-link-custom"><i class="bi bi-people-fill"></i> Campus Social</a>
+            <a href="startups.html" class="nav-link-custom"><i class="bi bi-rocket-takeoff-fill"></i> Startup Hub</a>
+            <a href="architect.html" class="nav-link-custom active shadow-sm"><i class="bi bi-cpu-fill"></i> Venture
+                Architect</a>
+            <a href="marketplace.html" class="nav-link-custom"><i class="bi bi-shop"></i> Skill Market</a>
+            <a href="workspace.html" class="nav-link-custom"><i class="bi bi-kanban"></i> Workspaces</a>
+            <a href="gigs.html" class="nav-link-custom"><i class="bi bi-lightning-charge-fill"></i> Micro-Gigs</a>
+            <a href="events.html" class="nav-link-custom"><i class="bi bi-calendar-event-fill"></i> Campus Hub</a>
+            <a href="wallet.html" class="nav-link-custom"><i class="bi bi-wallet2"></i> My Wallet</a>
+
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                <p class="text-secondary extra-small fw-bold ms-3 mb-2 text-uppercase letter-spacing-1 opacity-75">
+                    Account</p>
+                <a href="profile.html" class="nav-link-custom"><i class="bi bi-person-circle"></i> View Profile</a>
+                <a href="#" class="nav-link-custom text-danger logout-btn mt-2"><i class="bi bi-box-arrow-right"></i>
+                    Logout</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="architect-container animate-fade-in">
+            <!-- Header section -->
+            <div class="mb-5">
+                <h2 class="fw-bold mb-1 holographic-header">Venture Architect <span
+                        class="badge badge-glow ms-2 rounded-pill extra-small">AI POWERED</span></h2>
+                <p class="text-secondary small">Forge your raw ideas into professional technical blueprints.</p>
+            </div>
+
+            <div class="glass-card wizard-card p-5 luxury-card">
+                <div id="architect-initial" class="text-center py-5">
+                    <div class="mb-4">
+                        <div class="bg-primary-gradient d-inline-block rounded-4 p-4 mb-4 shadow-lg pulse-animation">
+                            <i class="bi bi-lightning-charge-fill text-white fs-1"></i>
+                        </div>
+                        <h3 class="fw-bold text-white mb-3">Initialize Architect Mode</h3>
+                        <p class="text-secondary mx-auto mb-5" style="max-width: 550px;">
+                            The Venture Architect helps non-technical founders define their tech stack, role
+                            requirements, and project roadmap using campus-wide skill data.
+                        </p>
+                    </div>
+                    <button class="btn btn-primary-gradient rounded-pill px-5 py-3 fw-bold shadow-lg hover-scale fs-5"
+                        id="startWizardBtn">
+                        START ARCHITECTING
+                    </button>
+                </div>
+
+                <div id="architect-wizard" class="d-none">
+                    <div
+                        class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-white border-opacity-10">
+                        <div>
+                            <h5 class="fw-bold text-white mb-0" id="wizard-title">Phase 1: Concept</h5>
+                            <p class="text-secondary extra-small mb-0" id="wizard-subtitle">Defining your core vision
+                            </p>
+                        </div>
+                        <div class="text-end" style="min-width: 120px;">
+                            <span class="text-primary fw-bold" id="wizard-progress-text">20%</span>
+                            <div class="progress mt-1" style="height: 4px; background: rgba(255,255,255,0.05);">
+                                <div class="progress-bar bg-primary-gradient" id="wizard-progress-bar"
+                                    style="width: 20%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wizard-body" class="mb-4 animate-fade-in py-3">
+                        <!-- Step content injected here -->
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-5 pt-3">
+                        <button class="btn btn-outline-secondary rounded-pill px-4" id="prevBtn" disabled>Back</button>
+                        <button class="btn btn-primary-gradient rounded-pill px-5" id="nextBtn">Continue</button>
+                    </div>
+                </div>
+
+                <div id="architect-result" class="d-none">
+                    <!-- Final Blueprint injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Launch Pitch Modal (Partial from startups.html for the bridge) -->
+    <div class="modal fade" id="pitchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-card p-3 border-secondary border-opacity-25">
+                <div class="modal-header border-0 pb-0">
+                    <h4 class="modal-title fw-bold holographic-header">Blueprint Bridge</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary small mb-4">You are converting your AI Blueprint into a live campus pitch.
+                    </p>
+                    <form id="autoPitchForm">
+                        <input type="text" id="pitchTitle" class="form-control bg-dark text-white mb-3"
+                            placeholder="Title">
+                        <textarea id="pitchProblem" class="form-control bg-dark text-white mb-3" rows="3"
+                            placeholder="Problem"></textarea>
+                        <button type="submit" class="btn btn-primary-gradient w-100 py-3 rounded-pill fw-bold">BROADCAST
+                            TO CAMPUS</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/dashboard-mesh.js"></script>
+    <script src="assets/js/etheral-shadow.js"></script>
+    <script>
+        const API_URL = 'http://127.0.0.1:8000';
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'index.html';
+
+        window.addEventListener('load', () => {
+            if (window.initEtheralShadow) {
+                window.initEtheralShadow('etheral-shadow-container', {
+                    color: 'rgba(99, 102, 241, 0.4)',
+                    scale: 80,
+                    speed: 45,
+                    noiseOpacity: 0.15
+                });
+            }
+            if (window.initDashboardMesh) window.initDashboardMesh('dashboard-mesh');
+        });
+    </script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/architect.js"></script>
+</body>
+
+</html>
