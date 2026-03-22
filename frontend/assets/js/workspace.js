@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:8000';
+const API_URL = 'https://skillswap-api-p79d.onrender.com';
 const token = localStorage.getItem('token');
 const urlParams = new URLSearchParams(window.location.search);
 const wsId = urlParams.get('id');

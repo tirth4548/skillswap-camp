@@ -1,5 +1,5 @@
 (function () {
-    const API_URL = 'http://127.0.0.1:8000';
+    const API_URL = 'https://skillswap-api-p79d.onrender.com';
 
     // Handle Login
     document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
