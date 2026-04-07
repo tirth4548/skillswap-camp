@@ -1,6 +1,6 @@
 /**
  * Real-time Interactive 3D Particle System for SkillSwap (Refined Version)
- * Features: Shorter Denser Particle Strings, Normalized High-DPI Text, Organic Morphing
+ * Features: Shorter Denser Particle Strings, Normalized High-DPI Text, Organic Morphing, Theme Awareness!
  */
 
 class ThreeNeuralWeb {
@@ -16,6 +16,8 @@ class ThreeNeuralWeb {
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.container.appendChild(this.renderer.domElement);
+
+        this.isLight = false; // Always dark
 
         // 1. Core Particle System
         this.coreCount = 6000;
@@ -53,15 +55,15 @@ class ThreeNeuralWeb {
         this.coreGeometry.setAttribute('position', new THREE.BufferAttribute(this.corePositions, 3));
         this.coreGeometry.setAttribute('color', new THREE.BufferAttribute(this.coreColors, 3));
 
-        const coreMaterial = new THREE.PointsMaterial({
+        this.coreMaterial = new THREE.PointsMaterial({
             size: 0.045,
             vertexColors: true,
             transparent: true,
             opacity: 0.9,
-            blending: THREE.AdditiveBlending,
+            blending: this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending,
             sizeAttenuation: true
         });
-        this.corePoints = new THREE.Points(this.coreGeometry, coreMaterial);
+        this.corePoints = new THREE.Points(this.coreGeometry, this.coreMaterial);
         this.scene.add(this.corePoints);
 
         // -- THE GALAXY --
@@ -70,14 +72,14 @@ class ThreeNeuralWeb {
         // Setup Strings
         this.stringGeometry.setAttribute('position', new THREE.BufferAttribute(this.stringPositions, 3));
         this.stringGeometry.setAttribute('color', new THREE.BufferAttribute(this.stringColors, 3));
-        const stringMaterial = new THREE.PointsMaterial({
+        this.stringMaterial = new THREE.PointsMaterial({
             size: 0.02,
             vertexColors: true,
             transparent: true,
             opacity: 0,
-            blending: THREE.AdditiveBlending
+            blending: this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending
         });
-        this.stringPoints = new THREE.Points(this.stringGeometry, stringMaterial);
+        this.stringPoints = new THREE.Points(this.stringGeometry, this.stringMaterial);
         this.scene.add(this.stringPoints);
 
         this.camera.position.z = 6;
@@ -105,8 +107,7 @@ class ThreeNeuralWeb {
             starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
             starPos[i * 3 + 2] = r * Math.cos(phi);
 
-            // Subtle color variance
-            const col = new THREE.Color().setHSL(Math.random() * 0.1 + 0.6, 0.4, 0.9);
+            const col = new THREE.Color().setHSL(Math.random() * 0.1 + 0.6, 0.4, this.isLight ? 0.3 : 0.9);
             starCols[i * 3] = col.r;
             starCols[i * 3 + 1] = col.g;
             starCols[i * 3 + 2] = col.b;
@@ -115,14 +116,15 @@ class ThreeNeuralWeb {
         starGeometry.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
         starGeometry.setAttribute('color', new THREE.BufferAttribute(starCols, 3));
 
-        const starMaterial = new THREE.PointsMaterial({
+        this.starMaterial = new THREE.PointsMaterial({
             size: 0.08,
             vertexColors: true,
             transparent: true,
             opacity: 0.8,
-            sizeAttenuation: true
+            sizeAttenuation: true,
+            blending: this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending
         });
-        this.stars = new THREE.Points(starGeometry, starMaterial);
+        this.stars = new THREE.Points(starGeometry, this.starMaterial);
         this.galaxyGroup.add(this.stars);
 
         // 2. Background Constellation Lines
@@ -147,16 +149,20 @@ class ThreeNeuralWeb {
         }
 
         lineGeom.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
-        const lineMat = new THREE.LineBasicMaterial({
-            color: 0x6366f1,
+        this.lineMat = new THREE.LineBasicMaterial({
+            color: this.isLight ? 0x4f46e5 : 0x6366f1,
             transparent: true,
             opacity: 0.15,
-            blending: THREE.AdditiveBlending
+            blending: this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending
         });
-        this.galaxyGroup.add(new THREE.LineSegments(lineGeom, lineMat));
+        this.galaxyGroup.add(new THREE.LineSegments(lineGeom, this.lineMat));
     }
 
     createNormalizedLabels() {
+        // Clear previous
+        this.labelSprites.forEach(sprite => this.scene.remove(sprite));
+        this.labelSprites = [];
+
         this.userSkills.forEach((skill, i) => {
             const angle = (i / this.userSkills.length) * Math.PI * 2;
             const radius = 2.4;
@@ -167,33 +173,31 @@ class ThreeNeuralWeb {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // Much wider canvas for long names
             canvas.width = 1024;
             canvas.height = 128;
 
             const text = skill.skill.name.toUpperCase();
 
-            // Pill Shape (Wider)
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+            // Background pill
+            ctx.fillStyle = this.isLight ? 'rgba(255, 255, 255, 0.95)' : 'rgba(15, 23, 42, 0.95)';
             ctx.beginPath();
             ctx.roundRect(12, 12, 1000, 104, 64);
             ctx.fill();
 
-            // Neon Border
-            ctx.shadowColor = '#6366f1';
-            ctx.shadowBlur = 15;
-            ctx.strokeStyle = '#6366f1';
+            // Border
+            ctx.shadowColor = this.isLight ? '#4f46e5' : '#6366f1';
+            ctx.shadowBlur = 10;
+            ctx.strokeStyle = this.isLight ? '#4f46e5' : '#6366f1';
             ctx.lineWidth = 6;
             ctx.stroke();
 
-            // Clear White Text
+            // Text
             ctx.shadowBlur = 0;
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = this.isLight ? '#0f172a' : '#ffffff';
             ctx.font = 'bold 50px Inter, system-ui, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // Dynamic Font Sizing to fit any length
             const metrics = ctx.measureText(text);
             const maxWidth = 880;
             if (metrics.width > maxWidth) {
@@ -207,7 +211,6 @@ class ThreeNeuralWeb {
             const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0, depthTest: false });
             const sprite = new THREE.Sprite(mat);
 
-            // Scale based on 8:1 aspect ratio
             sprite.scale.set(3.2, 0.4, 1);
             sprite.position.set(x, y, z);
             sprite.userData = { angle, radius, zOffset: z };
@@ -221,7 +224,9 @@ class ThreeNeuralWeb {
         const color = new THREE.Color(baseColor);
         for (let i = 0; i < this.coreCount; i++) {
             const h = color.getHSL({}).h + (Math.random() - 0.5) * 0.15;
-            const temp = new THREE.Color().setHSL(h, 0.8, 0.6);
+            // Darker colors in light mode for the core
+            const lum = this.isLight ? 0.4 : 0.6;
+            const temp = new THREE.Color().setHSL(h, 0.8, lum);
             this.coreColors[i * 3] = temp.r;
             this.coreColors[i * 3 + 1] = temp.g;
             this.coreColors[i * 3 + 2] = temp.b;
@@ -293,6 +298,10 @@ class ThreeNeuralWeb {
             this.createTemplate(this.currentTemplate, this.coreTargetPositions);
             this.updateColors(this.getRandomVibrantColor());
         });
+
+        window.addEventListener('themeChanged', (e) => {
+            // Intentionally disabled. The map must always remain dark
+        });
     }
 
     getRandomVibrantColor() {
@@ -319,11 +328,11 @@ class ThreeNeuralWeb {
         if (this.galaxyGroup) {
             this.galaxyGroup.rotation.y += 0.0005;
             this.galaxyGroup.rotation.z += 0.0002;
-            this.stars.material.size = 0.08 + Math.sin(time * 2) * 0.02;
+            if (this.stars) this.stars.material.size = 0.08 + Math.sin(time * 2) * 0.02;
         }
 
         const visibility = Math.max(0, Math.min(1, (this.expansion - 1.0) * 1.5));
-        this.stringPoints.material.opacity = visibility * 0.5;
+        if (this.stringMaterial) this.stringMaterial.opacity = visibility * 0.5;
 
         // String & Sprite Animation
         const strPos = this.stringGeometry.attributes.position.array;
@@ -350,7 +359,7 @@ class ThreeNeuralWeb {
                 strPos[sIdx + 1] = ly * ratio + wave;
                 strPos[sIdx + 2] = lz * ratio;
 
-                const c = new THREE.Color('#6366f1');
+                const c = new THREE.Color(this.isLight ? '#4f46e5' : '#6366f1');
                 strCol[sIdx] = c.r * ratio;
                 strCol[sIdx + 1] = c.g * ratio;
                 strCol[sIdx + 2] = c.b;

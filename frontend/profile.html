@@ -88,11 +88,26 @@
     </div>
 
     <div class="main-content">
-        <div class="glass-card profile-header d-flex align-items-center gap-5">
+        <div class="glass-card profile-header d-flex align-items-center gap-5 position-relative">
+            <!-- Social Verification Links -->
+            <div class="position-absolute top-0 end-0 p-4">
+                <div class="d-flex gap-2">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary rounded-circle" title="Verified LinkedIn Profile"><i class="bi bi-linkedin"></i></a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary rounded-circle" title="Verified GitHub Profile"><i class="bi bi-github"></i></a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary rounded-circle" title="Personal Portfolio"><i class="bi bi-globe"></i></a>
+                </div>
+            </div>
+            
             <img src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff&size=128" id="profilePic"
                 class="rounded-circle shadow" alt="Profile Picture">
             <div>
-                <h1 class="fw-bold mb-2" id="profileName">Loading...</h1>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h1 class="fw-bold mb-0" id="profileName">Loading...</h1>
+                    <!-- Verified Student Badge / Request Action -->
+                    <span id="verificationBadge" class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-1 d-flex align-items-center" title="Click to Request Verification" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#requestVerificationModal">
+                        <i class="bi bi-patch-exclamation-fill me-2"></i> Unverified
+                    </span>
+                </div>
                 <p class="text-secondary fs-5 mb-3" id="profileTagline">Department of <span id="profileDept">...</span>
                     • Year <span id="profileYear">...</span></p>
                 <div class="d-flex gap-2">
@@ -103,7 +118,7 @@
             </div>
         </div>
 
-        <div class="glass-card p-0 mb-4 overflow-hidden position-relative" style="height: 600px; background: #050505;">
+        <div id="neural-map-card" class="glass-card p-0 mb-4 overflow-hidden position-relative" style="height: 600px;">
             <div id="neuralNetworkSkills" class="w-100 h-100">
                 <!-- Neural Network Canvas will be here -->
                 <div class="position-absolute bottom-0 start-0 p-3 z-index-1">
@@ -122,7 +137,7 @@
                 </div>
 
                 <div class="glass-card p-4 mt-4">
-                    <h5 class="fw-bold mb-4">My Skills</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="fw-bold mb-0">My Skills</h5><button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addSkillModal"><i class="bi bi-plus"></i> Add Skill</button></div>
                     <div class="row g-3">
                         <div class="col-6">
                             <h6 class="text-secondary small fw-bold mb-3">TEACHING</h6>
@@ -160,6 +175,47 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Proof of Work Portfolio -->
+                <div class="glass-card p-4 mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Proof of Work</h5>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#addProjectModal"><i class="bi bi-plus-lg"></i> Add</button>
+                    </div>
+                    
+                    <div class="d-flex flex-column gap-3" id="proofOfWorkContainer">
+                        <!-- Project 1 -->
+                        <a href="javascript:void(0)" class="text-decoration-none text-reset">
+                            <div class="p-3 bg-dark border border-secondary border-opacity-25 rounded hover-scale transition-premium">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold text-white mb-0">E-Commerce Dashboard</h6>
+                                    <i class="bi bi-box-arrow-up-right text-secondary extra-small"></i>
+                                </div>
+                                <p class="text-secondary extra-small mb-2">React.js • TailwindCSS</p>
+                                <div class="d-flex align-items-center gap-2 extra-small text-success">
+                                    <i class="bi bi-check-circle-fill"></i> Verified by 2 Mentors
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <!-- Project 2 -->
+                        <a href="javascript:void(0)" class="text-decoration-none text-reset">
+                            <div class="p-3 bg-dark border border-secondary border-opacity-25 rounded hover-scale transition-premium">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold text-white mb-0">Hawk Street App UI</h6>
+                                    <i class="bi bi-box-arrow-up-right text-secondary extra-small"></i>
+                                </div>
+                                <p class="text-secondary extra-small mb-2">Figma • UI Design</p>
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <div class="d-flex align-items-center gap-2 extra-small text-secondary opacity-75" id="selfReportedBadge">
+                                        <i class="bi bi-shield-check"></i> Self-Reported
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-info rounded-pill extra-small py-0 px-2 border-opacity-50" id="askEndorseBtn" data-bs-toggle="modal" data-bs-target="#askEndorsementModal">Ask for Endorsement</button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -184,7 +240,145 @@
                             <textarea class="form-control bg-dark border-secondary text-white" id="editBio"
                                 rows="3"></textarea>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">LinkedIn URL</label>
+                            <input type="url" class="form-control bg-dark border-secondary text-white" id="editLinkedin" placeholder="https://linkedin.com/in/username">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">GitHub URL</label>
+                            <input type="url" class="form-control bg-dark border-secondary text-white" id="editGithub" placeholder="https://github.com/username">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Portfolio URL</label>
+                            <input type="url" class="form-control bg-dark border-secondary text-white" id="editPortfolio" placeholder="https://mywebsite.com">
+                        </div>
+
                         <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Request Verification Modal -->
+    <div class="modal fade" id="requestVerificationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Request Student Verification</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="verifyForm">
+                        <p class="text-secondary small mb-3">Please enter your university .edu email to verify your student status. A confirmation link will be sent.</p>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">University Email</label>
+                            <input type="email" class="form-control bg-dark border-secondary text-white" id="verifyEmail" placeholder="student@university.edu" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-2">Send Verification</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Skill Modal -->
+    <div class="modal fade" id="addSkillModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Add a Skill</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSkillForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Skill Name</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="newSkillName" placeholder="e.g. React.js, Public Speaking" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Category</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="skillCategory" id="catTeach" value="teach" checked>
+                                    <label class="form-check-label text-white" for="catTeach">I want to TEACH this</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="skillCategory" id="catLearn" value="learn">
+                                    <label class="form-check-label text-white" for="catLearn">I want to LEARN this</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Proficiency</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="skillProficiency">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate" selected>Intermediate</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Add Skill</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Project/Portfolio Modal -->
+    <div class="modal fade" id="addProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Add Proof of Work</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProjectForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Project Title</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="projTitle" placeholder="e.g. Campus Event App" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Tech Stack / Tools</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" id="projStack" placeholder="e.g. Flutter, Firebase" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Project URL (GitHub, Figma, Live Site)</label>
+                            <input type="url" class="form-control bg-dark border-secondary text-white" id="projUrl" placeholder="https://..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Add Project</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Ask for Endorsement Modal -->
+    <div class="modal fade" id="askEndorsementModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content glass-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Ask for Endorsement</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="askEndorsementForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Select Mentor</label>
+                            <select class="form-select bg-dark border-secondary text-white" id="endorseMentor">
+                                <option value="Alex M." selected>Alex M. (React.js Session)</option>
+                                <option value="Sarah T.">Sarah T. (UI Design Session)</option>
+                                <option value="Dr. Chen">Dr. Chen (Algorithms)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary">Message</label>
+                            <textarea class="form-control bg-dark border-secondary text-white" rows="3" placeholder="Hey, could you verify this project we built together?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-gradient w-100 mt-2">Send Request</button>
                     </form>
                 </div>
             </div>

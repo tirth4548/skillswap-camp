@@ -224,6 +224,7 @@ function initNeuralBackground() {
         });
         drawLines();
         requestAnimationFrame(animate);
+        if (document.body && document.body.classList.contains("light-mode")) return;
     }
 
     window.addEventListener('resize', resize);

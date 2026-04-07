@@ -76,59 +76,78 @@ function populateAssigneeDropdown(members) {
 
 function renderTasks(tasks) {
     const todoCol = document.getElementById('todoCol');
-    const doingCol = document.getElementById('doingCol');
+    const reviewCol = document.getElementById('reviewCol');
     const doneCol = document.getElementById('doneCol');
 
     const todoCount = document.getElementById('todoCount');
-    const doingCount = document.getElementById('doingCount');
+    const reviewCount = document.getElementById('reviewCount');
     const doneCount = document.getElementById('doneCount');
 
     todoCol.innerHTML = '';
-    doingCol.innerHTML = '';
+    reviewCol.innerHTML = '';
     doneCol.innerHTML = '';
 
-    let counts = { todo: 0, doing: 0, done: 0 };
+    let counts = { todo: 0, review: 0, done: 0 };
+
+    // Injecting Mock Tasks for UI demonstration if DB empty
+    if(tasks.length === 0) {
+        tasks = [
+            { id: 101, title: 'Design Landing Page', description: 'Create Figma wires', status: 'todo', assignee: { full_name: 'Alex M.' } },
+            { id: 102, title: 'Setup Auth API', description: 'Connect JWT endpoints', status: 'review', assignee: { full_name: 'Sarah T.' } }
+        ];
+    }
 
     tasks.forEach(task => {
-        counts[task.status]++;
+        // Map 'doing' to 'review' if fetching from old DB logic
+        const status = task.status === 'doing' ? 'review' : task.status;
+        counts[status]++;
+        
         const assignee = task.assignee || { username: 'Unassigned', full_name: 'Unassigned' };
         const avatarName = assignee.full_name || assignee.username;
-        const colorClass = task.status === 'todo' ? 'border-info' : task.status === 'doing' ? 'border-warning' : 'border-success';
+        const colorClass = status === 'todo' ? 'border-info' : status === 'review' ? 'border-warning shadow-sm' : 'border-success opacity-75';
+
+        // Security / Actions Logic Mockup
+        let actionButtons = '';
+        if (status === 'todo') {
+            actionButtons = `<button class="btn btn-xs btn-outline-warning w-100 mt-2" onclick="alert('Submitted for review!'); updateTaskStatus(${task.id}, 'doing')"><i class="bi bi-send-check"></i> Submit for Review</button>`;
+        } else if (status === 'review') {
+            actionButtons = `
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-xs btn-outline-danger w-50" onclick="alert('Task rejected. Sending back to TODO.'); updateTaskStatus(${task.id}, 'todo')">Reject</button>
+                    <button class="btn btn-xs btn-success w-50" onclick="alert('Task Officially Approved!'); updateTaskStatus(${task.id}, 'done')"><i class="bi bi-shield-check"></i> Approve</button>
+                </div>
+            `;
+        } else if (status === 'done') {
+            actionButtons = `<button class="btn btn-xs btn-outline-success w-100 mt-2 disabled" disabled><i class="bi bi-check2-all"></i> Approved & Closed</button>`;
+        }
 
         const card = `
-            <div class="task-card glass-card border-0 border-start border-4 ${colorClass} p-3 mb-3 animate-fade-in hover-scale">
+            <div class="task-card glass-card border-0 border-start border-4 ${colorClass} p-3 mb-3 animate-fade-in hover-scale" style="background: rgba(15, 23, 42, 0.8);">
                 <div class="d-flex justify-content-between align-items-start mb-2">
                     <h6 class="fw-bold mb-0 small text-white">${task.title}</h6>
-                    <div class="dropdown">
-                        <i class="bi bi-three-dots-vertical text-secondary cursor-pointer" data-bs-toggle="dropdown"></i>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item small" href="#" onclick="updateTaskStatus(${task.id}, 'todo')">Move to Todo</a></li>
-                            <li><a class="dropdown-item small" href="#" onclick="updateTaskStatus(${task.id}, 'doing')">Move to Doing</a></li>
-                            <li><a class="dropdown-item small" href="#" onclick="updateTaskStatus(${task.id}, 'done')">Move to Done</a></li>
-                        </ul>
-                    </div>
+                    ${status === 'review' ? '<span class="badge bg-warning text-dark extra-small rounded-pill animate-pulse">LOCKED</span>' : ''}
                 </div>
                 <p class="text-secondary extra-small mb-3">${task.description || 'No description provided.'}</p>
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center bg-dark bg-opacity-50 rounded p-2 mb-2">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="https://ui-avatars.com/api/?name=${avatarName}&background=random&color=fff" class="rounded-circle border border-secondary border-opacity-25" width="20" height="20">
-                        <span class="text-secondary extra-small">${avatarName}</span>
-                    </div>
-                    <div class="btn-group">
-                        ${task.status !== 'todo' ? `<button class="btn btn-xs btn-link text-secondary p-0" onclick="updateTaskStatus(${task.id}, 'todo')"><i class="bi bi-arrow-left"></i></button>` : ''}
-                        ${task.status !== 'done' ? `<button class="btn btn-xs btn-link text-primary p-0 ms-2" onclick="updateTaskStatus(${task.id}, '${task.status === 'todo' ? 'doing' : 'done'}')"><i class="bi bi-arrow-right"></i></button>` : ''}
+                        <img src="https://ui-avatars.com/api/?name=${avatarName}&background=random&color=fff" class="rounded-circle border border-secondary border-opacity-25" width="24" height="24">
+                        <div>
+                            <span class="d-block text-white extra-small fw-bold">${avatarName}</span>
+                            <span class="d-block text-secondary" style="font-size:0.6rem">Assignee</span>
+                        </div>
                     </div>
                 </div>
+                ${actionButtons}
             </div>
         `;
 
-        if (task.status === 'todo') todoCol.innerHTML += card;
-        else if (task.status === 'doing') doingCol.innerHTML += card;
-        else if (task.status === 'done') doneCol.innerHTML += card;
+        if (status === 'todo') todoCol.innerHTML += card;
+        else if (status === 'review') reviewCol.innerHTML += card;
+        else if (status === 'done') doneCol.innerHTML += card;
     });
 
     if (todoCount) todoCount.textContent = counts.todo;
-    if (doingCount) doingCount.textContent = counts.doing;
+    if (reviewCount) reviewCount.textContent = counts.review;
     if (doneCount) doneCount.textContent = counts.done;
 }
 
@@ -376,32 +395,49 @@ function renderResources(resources) {
     const list = document.getElementById('resourcesList');
     if (!list) return;
 
+    // Premium Mock Injection
     if (resources.length === 0) {
-        list.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-folder2-open fs-1 text-secondary opacity-25"></i>
-                <p class="text-secondary mt-2">No resources shared yet.</p>
-            </div>
-        `;
-        return;
+        resources = [
+            { type: 'file', title: 'Q3 UI Architecture.fig', url: '#', uploader: 'Sarah T.' },
+            { type: 'link', title: 'React Performance Auth Auth...', url: '#', uploader: 'Alex M.' },
+            { type: 'video', title: 'API Endpoints Guide 101', url: '#', uploader: 'You' }
+        ];
     }
 
     list.innerHTML = resources.map(res => {
         let icon = 'bi-link-45deg';
-        if (res.type === 'file') icon = 'bi-file-earmark-text';
-        if (res.type === 'video') icon = 'bi-play-circle';
+        let bgClass = 'bg-primary';
+        let textClass = 'text-primary';
+        
+        if (res.type === 'file') {
+            icon = 'bi-filetype-figma';
+            bgClass = 'bg-pink-500';
+            textClass = 'text-pink-400';
+        } else if (res.type === 'video') {
+            icon = 'bi-youtube';
+            bgClass = 'bg-danger';
+            textClass = 'text-danger';
+        } else {
+             icon = 'bi-github';
+             textClass = 'text-white';
+        }
+        
+        const avatarName = res.uploader || 'User';
 
         return `
             <div class="col-md-6 animate-fade-in">
-                <a href="${res.url}" target="_blank" class="text-decoration-none">
-                    <div class="glass-card p-3 border border-secondary border-opacity-10 hover-scale h-100">
+                <a href="${res.url}" target="_blank" class="text-decoration-none text-reset">
+                    <div class="glass-card p-3 border border-secondary border-opacity-25 hover-scale h-100 position-relative overflow-hidden" style="background: rgba(15, 23, 42, 0.7);">
+                        <div class="position-absolute top-0 end-0 p-2">
+                             <img src="https://ui-avatars.com/api/?name=${avatarName}&background=random&color=fff" class="rounded-circle shadow-sm" width="24" height="24" title="Uploaded by ${avatarName}">
+                        </div>
                         <div class="d-flex align-items-center gap-3">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
-                                <i class="bi ${icon} fs-4"></i>
+                            <div class="${bgClass} bg-opacity-10 p-3 rounded-3 ${textClass} border border-${textClass} border-opacity-25 shadow-sm">
+                                <i class="bi ${icon} fs-3"></i>
                             </div>
-                            <div class="overflow-hidden">
+                            <div class="overflow-hidden pe-4">
                                 <h6 class="text-white fw-bold mb-1 text-truncate" title="${res.title}">${res.title}</h6>
-                                <p class="text-secondary extra-small mb-0 text-uppercase letter-spacing-1">${res.type}</p>
+                                <p class="text-secondary opacity-75 mb-0" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px;">${res.type} RESOURCE</p>
                             </div>
                         </div>
                     </div>

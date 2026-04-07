@@ -52,10 +52,10 @@ function renderEvents(events) {
 document.getElementById('createEventForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = {
-        title: document.getElementById('eventTitleInput')?.value || '',
-        description: document.getElementById('eventDescInput')?.value || '',
-        location: document.getElementById('eventLocInput')?.value || '',
-        event_time: document.getElementById('eventTimeInput')?.value || '',
+        title: document.getElementById('eventTitle')?.value || '',
+        description: document.getElementById('eventDesc')?.value || '',
+        location: document.getElementById('eventLoc')?.value || '',
+        event_time: document.getElementById('eventTime')?.value || '',
         type: 'fest'
     };
 

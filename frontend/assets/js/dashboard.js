@@ -596,3 +596,39 @@ fetchDashboardData();
 if (window.initDashboardGalaxy) {
     window.initDashboardGalaxy('dashboard-galaxy');
 }
+
+
+// --- Endorsement State Sync (Dashboard) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const state = localStorage.getItem('hawkProjectState');
+    const dot = document.getElementById('notifDot');
+    const emptyUI = document.getElementById('emptyNotifs');
+    const pendingUI = document.getElementById('pendingRequest');
+    const endorseBtn = document.getElementById('endorseSubmitBtn');
+
+    // If there is a pending request, show the red dot and the modal UI
+    if (state === 'pending') {
+        if (dot) dot.classList.remove('d-none');
+        if (emptyUI) emptyUI.classList.add('d-none');
+        if (pendingUI) pendingUI.classList.remove('d-none');
+    }
+
+    if (endorseBtn) {
+        endorseBtn.addEventListener('click', () => {
+            // Mentor approves it!
+            localStorage.setItem('hawkProjectState', 'endorsed');
+            
+            // UI updates
+            endorseBtn.innerHTML = 'Approved! <i class="bi bi-check2-all"></i>';
+            endorseBtn.classList.replace('btn-success', 'btn-outline-success');
+            setTimeout(() => {
+                const modalEl = document.getElementById('mentorReviewModal');
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.hide();
+                if (dot) dot.classList.add('d-none');
+                if (emptyUI) emptyUI.classList.remove('d-none');
+                if (pendingUI) pendingUI.classList.add('d-none');
+            }, 1000);
+        });
+    }
+});
